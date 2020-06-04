@@ -15,15 +15,13 @@ async function fetchRequest(url) {
 class App extends Component {
   constructor() {
     super();
-    this.state = {courses:[], loading:true}
+    this.state = {courses:[]}
   }
 
   componentDidMount() {
-    if (this.state.loading) {
       fetchRequest('http://localhost:5000/api/courses')
-        .then(courses => this.setState({courses, loading:false}))
+        .then(courses => this.setState({courses}))
         .catch(error => console.error('Error fetching and parsing data', error));
-    }
   }
 
   render() {
@@ -37,7 +35,7 @@ class App extends Component {
             Courses list :
         </p>
         <ul>
-          {this.state.courses.map(course => <li>{course.title}</li>)}
+          {this.state.courses.map(course => <li key={course.id}>{course.title}</li>)}
         </ul>
       </div>
     );
