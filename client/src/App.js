@@ -3,6 +3,11 @@ import './global.css';
 import Router from './components/routes';
 
 class App extends Component {
+    
+    createUser(user) {
+        console.log("create user "+user)
+    }
+
     render() {
         return (
             <div id="root">
@@ -10,11 +15,11 @@ class App extends Component {
                     <div className="header">
                         <div className="bounds">
                             <h1 className="header--logo">Courses</h1>
-                            <nav><a className="signup" href="sign-up.html">Sign Up</a><a className="signin" href="sign-in.html">Sign In</a></nav>
+                            <nav><a className="signup" href="/sign-up">Sign Up</a><a className="signin" href="/sign-in">Sign In</a></nav>
                         </div>
                     </div>
                     <br />
-                    <Router />
+                    <Router  createUser={this.createUser} />
                 </div>
             </div>
         );

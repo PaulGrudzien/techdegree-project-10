@@ -4,17 +4,18 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 // import components
 import Courses from './courses.js';
 import CourseDetail from './course-detail.js';
+import SignIn from './user-sign-in.js';
+import SignUp from './user-sign-up.js';
 //import NotFound from './components/not-found.js';
 
-function Router() {
+function Router(props) {
     return(
         <BrowserRouter>
             <Switch>
-                {/* route for search */}
                 <Route exact path="/" component={Courses}/>
-                {/* routes for main topics */}
                 <Route exact path="/courses/:id" component={CourseDetail}/>
-                {/* // other routes*/}
+                <Route path="/sign-in" component={SignIn}/>
+                <Route path="/sign-up" render={(props) => <SignUp {...props} />} />
                 {/*<Route component={NotFound} />*/}
             </Switch>
         </BrowserRouter>

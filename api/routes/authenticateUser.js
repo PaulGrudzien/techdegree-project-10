@@ -26,8 +26,7 @@ async function authenticateUser(req, res, next) {
         message = 'Auth header not found';
     }
     
-//    if (message) {
-    if (false) {
+    if (message) {
         const error = new Error('Access Denied');
         error.status = 401;
         next(error)

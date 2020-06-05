@@ -12,7 +12,7 @@ class CourseDetail extends Component {
 
     componentDidMount() {
         const courseId = this.props.match.params.id
-        fetchRequest(`http://localhost:5000/api/courses/${courseId}`)
+        fetchRequest(`/courses/${courseId}`, 'GET')
             .then(course => this.setState({course}))
             .catch(error => console.error('Error fetching and parsing data', error));
     }
@@ -42,7 +42,7 @@ class CourseDetail extends Component {
                         <div className="grid-100">
                             <span>
                                 <a className="button" href="update-course.html">Update Course</a>
-                                <a className="button" href="#">Delete Course</a>
+                                <a className="button" href="/">Delete Course</a>
                             </span>
                             <a className="button button-secondary" href="/">Return to List</a>
                         </div>

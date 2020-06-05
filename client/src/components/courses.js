@@ -8,7 +8,7 @@ class Courses extends Component {
     }
 
     componentDidMount() {
-        fetchRequest('http://localhost:5000/api/courses')
+        fetchRequest('/courses', 'GET')
             .then(courses => this.setState({courses}))
             .catch(error => console.error('Error fetching and parsing data', error));
     }
