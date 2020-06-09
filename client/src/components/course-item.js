@@ -1,5 +1,6 @@
 import React from 'react';
 
+/* the "button" for one course used in the courses list */
 function Course(props) {
     return (
         <div className="grid-33">

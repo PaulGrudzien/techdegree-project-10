@@ -1,5 +1,6 @@
 import React from 'react';
 
+/* an header with the authorization informations or links */
 function Header(props) {
     return (
         <div className="header">

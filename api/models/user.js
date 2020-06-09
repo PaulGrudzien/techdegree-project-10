@@ -32,10 +32,13 @@ module.exports = (sequelize) => {
             type: Sequelize.STRING,
             allowNull: false,
             defaultValue: '',
-            unique: true,
+            unique: {
+                args: true,
+                msg: 'Oops. Looks like an account already exists with this email address.'
+            },
             validate: {
                 isEmail: {
-                    msq: "enter a valid e-mail"
+                    msg: "Enter a valid e-mail"
                 }
             }
         },

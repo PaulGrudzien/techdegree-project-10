@@ -2,13 +2,15 @@ function asyncHandler(callback) {
     return async function (req, res, next) {
         try {
             await callback(req, res, next);
-        } catch (error) {
-            if(["SequelizeValidationError", "SequelizeUniqueConstraintError"].includes(error.name)) {
+        } catch (err) {
+            if(["SequelizeValidationError", "SequelizeUniqueConstraintError"].includes(err.name)) {
+                const error = new Error()
                 error.status = 400;
-                error.message = error.errors.map(error => error.message).join(" - ");
+                error.message = err.errors.map(error => error.message).join(" - ");
+                error.errors = err.errors.map(error => error.message)
                 next(error);
             } else {
-                next(error)
+                next(err)
             }
         }
     }

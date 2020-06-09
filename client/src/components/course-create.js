@@ -1,54 +1,72 @@
 import React, { Component } from 'react';
+import Validation from './validation';
+import fetchRequest from '../fetchRequest';
 
+/* a form to create a course */
 class CreateCourse extends Component {
-    constructor() {
-        super();
-        this.state = {title:"", description:"", estimatedTime:"", materialsNeeded:""};
+    constructor(props) {
+        super(props);
+        this.state = {title:"", description:"", estimatedTime:"", materialsNeeded:"", errors:[]};
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
-    }
+    };
 
+    /* function for the values of the text inputs */
     handleChange(event) {
         const change = {};
         change[event.target.name] = event.target.value;
         this.setState(change);
-    }
+    };
 
-    handleSubmit(event) {
+    /* create the course */
+    async handleSubmit(event) {
         event.preventDefault();
-        // add here the validation of the form
-        // add here the authentification
-        this.props.history.push('/');
-    }
+        const { title, description, estimatedTime, materialsNeeded } = this.state;
+        const errors = [[title,"Title"], [description, "Description"]]
+            .map(cur => cur[0] === "" ? `Please provide a value for "${cur[1]}"` : null)
+            .filter(cur => cur);
+        if (errors.length) {
+            this.setState({ errors });
+        } else {
+            try {
+                const course = { title, description, estimatedTime, materialsNeeded };
+                const response = await fetchRequest(`/courses`, 'POST', course, true, this.props.credentials);
+                if (response.status === 201) {
+                    this.props.history.push('/');
+                } else if (response.status === 400) {
+                    const error = await response.json();
+                    this.setState({ errors:error.errors });
+                } else {
+                    throw new Error();
+                };
+            } catch(error) {
+                console.error(error);
+                this.props.history.push('/error');
+            };
+        };
+    };
 
+    /* cancel and go back to courses list */
     handleCancel(event) {
         event.preventDefault();
         this.props.history.push('/');
-    }
+    };
 
     render() {
         return (
             <div className="bounds course--detail">
                 <h1>Create Course</h1>
                 <div>
-                    <div>
-                        <h2 className="validation--errors--label">Validation errors</h2>
-                        <div className="validation-errors">
-                            <ul>
-                                <li>Please provide a value for "Title"</li>
-                                <li>Please provide a value for "Description"</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <form>
+                    <Validation errors={this.state.errors} />
+                    <form onSubmit={this.handleSubmit}>
                         <div className="grid-66">
                             <div className="course--header">
                                 <h4 className="course--label">Course</h4>
                                 <div>
                                     <input id="title" name="title" type="text" className="input-title course--title--input" placeholder="Course title..." value={this.state.title} onChange={this.handleChange} />
                                 </div>
-                                <p>By Joe Smith</p>
+                                <p>{`By ${this.props.user.firstName} ${this.props.user.lastName}`}</p>
                             </div>
                             <div className="course--description">
                                 <div>
@@ -75,14 +93,14 @@ class CreateCourse extends Component {
                             </div>
                         </div>
                         <div className="grid-100 pad-bottom">
-                            <button className="button" type="submit" onSubmit={this.handleSubmit}>Create Course</button>
+                            <button className="button" type="submit">Create Course</button>
                             <button className="button button-secondary" onClick={this.handleCancel}>Cancel</button>
                         </div>
                     </form>
                 </div>
             </div>
         );
-    }
-}
+    };
+};
 
 export default CreateCourse;

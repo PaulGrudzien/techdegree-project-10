@@ -12,24 +12,30 @@ class App extends Component {
             credentials:localStorage.getItem('credentials') || null,
         }
         this.signIn = this.signIn.bind(this);
+        this.signUp = this.signUp.bind(this);
         this.signOut = this.signOut.bind(this);
     }
     
-    signIn(emailAddress, password) {
-        const credentials = btoa(`${emailAddress}:${password}`);
-        return fetchRequest(`/users`, 'GET', null, true, credentials)
-            .then(response => {
-                if (!response.error) {
-                    this.setState({currentUser:response})
-                    localStorage.setItem('currentUser', JSON.stringify(response));
-                    localStorage.setItem('credentials', credentials);
-                }
-                return response
-            })
-            .catch(error => {
-                console.error('Error fetching and parsing data', error)
-            })
-    }
+    async signIn(emailAddress, password) {
+        try {
+            const credentials = btoa(`${emailAddress}:${password}`);
+            const response = await fetchRequest(`/users`, 'GET', null, true, credentials)
+            if (response.status === 200 || response.status === 304) {
+                const currentUser = await response.json()
+                this.setState({currentUser})
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                localStorage.setItem('credentials', credentials);
+                return "Ok"
+            } else if (response.status === 401) {
+                return "Oops, email address or password is invalid!"
+            } else {
+                throw new Error();
+            }
+        } catch (error) {
+            console.error('Error fetching and parsing data', error)
+            window.location='/error';
+        }
+    } 
     
     signOut() {
         localStorage.removeItem('currentUser');
@@ -37,8 +43,22 @@ class App extends Component {
         this.setState({currentUser:null, credentials:null});
     }
     
-    signUp(user) {
-        console.log("create user "+user)
+    async signUp(user) {
+        try {
+            const response = await fetchRequest(`/users`, 'POST', user)
+            if (response.status === 201) {
+                this.signIn(user.emailAddress, user.password);
+                return []
+            } else if (response.status === 400) {
+                const error = await response.json()
+                return error.errors;
+            } else {
+                throw new Error();
+            }
+        } catch(error) {
+            console.error('Error fetching and parsing data', error)
+            window.location='/error';
+        }
     }
 
     render() {

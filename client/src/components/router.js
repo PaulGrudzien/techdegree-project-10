@@ -14,21 +14,21 @@ import Forbidden from './forbidden.js';
 import UnhandledError from './error.js';
 import PrivateRoute from './private-route';
 
+/* all the routes used in the apps */
 function Router(props) {
     return(
         <BrowserRouter>
             <Switch>
                 <Route exact path="/" component={CoursesList}/>
-                <PrivateRoute exact path="/courses/create" component={CreateCourse} credentials={props.credentials}/>
+                <PrivateRoute exact path="/courses/create" component={CreateCourse} credentials={props.credentials} user={props.user}/>
                 <PrivateRoute exact path="/courses/:id/update" component={UpdateCourse} credentials={props.credentials} user={props.user}/>
                 <Route exact path="/courses/:id" render={(routerProps) => <CourseDetail {...routerProps} user={props.user} credentials={props.credentials} />} />
                 <Route path="/signin" render={(routerProps) => <SignIn {...routerProps} signIn={props.signIn} />} />
-                <Route path="/signup" render={(routerProps) => <SignUp {...routerProps} />} />
-                <Route path="/signout" render={(routerProps) => <SignOut {...routerProps} signOut={() => props.signOut()} />} />
+                <Route path="/signup" render={(routerProps) => <SignUp {...routerProps} signUp={props.signUp} />} />
+                <Route path="/signout" render={(routerProps) => <SignOut {...routerProps} signOut={props.signOut} />} />
                 <Route exact path="/notfound" component={NotFound}/>
                 <Route exact path="/error" component={UnhandledError}/>
                 <Route exact path="/forbidden" component={Forbidden}/>
-                <Route exact path="/courses/:id" component={CourseDetail}/>
                 <Route component={NotFound} />
             </Switch>
         </BrowserRouter>

@@ -20,6 +20,7 @@ function validateCourse(course) {
     if (errors.length) {
         const error = new Error(errors.join(" - "));
         error.status = 400;
+        error.errors = errors;
         throw error;
     }
 }
@@ -69,7 +70,9 @@ router.get('/courses/:id', asyncHandler(async (req, res) => {
         const result = await appendUser(course)
         res.json(result);
     } else {
-        throw new Error('Server Error')
+        const error = new Error('Course not found')
+        error.status = 404
+        throw error
     }
 }));
 

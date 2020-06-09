@@ -14,12 +14,10 @@ async function fetchRequest(path, method, body = null, requiresAuth = false, cre
             options.headers['Authorization'] = `Basic ${credentials}`;
         }
         let response = await fetch(url, options);
-        if (response.status !== 204) {
-            let data = await response.json();
-            return data;
-        }
+        return response
     } catch(error) {
-        console.error(error)
+        console.error(error);
+        window.location = "/error";
     }
 }
 

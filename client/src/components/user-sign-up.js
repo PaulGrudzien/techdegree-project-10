@@ -1,44 +1,52 @@
 import React, { Component } from 'react';
+import Validation from './validation';
 
+/* a form to sign up */
 class UserSignUp extends Component {
     constructor(props) {
         super(props);
-        this.state = {firstName:"", lastName:"", emailAddress:"", password:"", confirmPassword:"", errors:[]}
+        this.state = {firstName:"", lastName:"", emailAddress:"", password:"", confirmPassword:"", errors:[]};
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
     }
 
+    /* function for the values of the text inputs */
     handleChange(event) {
         const change = {};
         change[event.target.name] = event.target.value;
         this.setState(change);
     }
 
-    handleSubmit(event) {
+    /* call the sign-up method set in App.js file */
+    async handleSubmit(event) {
         event.preventDefault();
         const { firstName, lastName, emailAddress, password, confirmPassword } = this.state;
-        const { createUser } = this.props;
-        // validation of the form
-        
-        // create user and send it to the server
-        const user = { firstName, lastName, emailAddress, password };
-        createUser(user)
-            .then( errors => {
-                if (errors.length) {
-                    this.setState({ errors });
+        const errors = [[firstName, "First Name"], [lastName, "Last Name"], [emailAddress,"Email Address"], [password, "Password"], [confirmPassword, "Confirm Password"]]
+            .map(cur => cur[0] === "" ? `Please provide a value for "${cur[1]}"` : null)
+            .filter(cur => cur);
+        if (password !== confirmPassword) {
+            errors.push("Password and Confirm Password doesn't match!");
+        }
+        if (errors.length) {
+            this.setState({ errors });
+        } else {
+            try {
+                const user = { firstName, lastName, emailAddress, password };
+                const response = await this.props.signUp(user);
+                if (response.length) {
+                    this.setState({ errors:response });
                 } else {
-                    console.log(`${firstName} ${lastName} (${emailAddress}) is successfully signed up and authenticated!`);
+                    this.props.history.push('/');
                 }
-            })
-            .catch( err => { 
-                console.error(err);
+            } catch(error) {
+                console.error(error);
                 this.props.history.push('/error');
-            }); 
-        // redirect user to root
-        this.props.history.push('/');
+            }
+        }
     }
 
+    /* cancel and go back to courses list */
     handleCancel(event) {
         event.preventDefault();
         this.props.history.push('/');
@@ -49,6 +57,7 @@ class UserSignUp extends Component {
             <div className="bounds">
                 <div className="grid-33 centered signin">
                     <h1>Sign Up</h1>
+                    <Validation errors={this.state.errors} />
                     <div>
                         <form>
                             <div>

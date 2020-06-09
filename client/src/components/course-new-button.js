@@ -1,5 +1,6 @@
 import React from 'react';
 
+/* the "new course" button used in the courses list */
 function NewCourse() {
     return (
         <div className="grid-33"><a className="course--module course--add--module" href="/courses/create">

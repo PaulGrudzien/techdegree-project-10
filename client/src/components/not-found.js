@@ -1,5 +1,6 @@
 import React from 'react';
 
+/* a view that informe the page or the course doesn't exist */
 function NotFound() {
     return(
         <div className="bounds">
