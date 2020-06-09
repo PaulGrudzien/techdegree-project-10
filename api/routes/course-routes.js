@@ -28,7 +28,7 @@ function validateCourse(course) {
 async function appendUser(course) {
     const {userId, ...values} = course.dataValues;
     const owner = await User.findOne({
-        attributes: ['firstName', 'lastName', 'emailAddress'],
+        attributes: ['id', 'firstName', 'lastName', 'emailAddress'],
         where : { id: userId }
     });
     return {...values, owner};
@@ -62,7 +62,7 @@ router.post('/courses', authenticateUser, asyncHandler(async (req, res) => {
 // get a course by id. No auth
 router.get('/courses/:id', asyncHandler(async (req, res) => {
     const course = await Course.findOne({
-        attributes: ['title', 'description', 'estimatedTime', 'materialsNeeded', 'userId'],
+        attributes: ['id', 'title', 'description', 'estimatedTime', 'materialsNeeded', 'userId'],
         where : { id: req.params.id }
     });
     if (course) {
