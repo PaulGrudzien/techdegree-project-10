@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import fetchRequest from '../fetchRequest';
+import ReactMarkdown from 'react-markdown';
+import deleteCourse from './course-delete.js';
 
 class CourseDetail extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = { course:{ 
             owner:{},
             materialsNeeded:null
@@ -18,32 +20,17 @@ class CourseDetail extends Component {
     }
 
     render() {
-        // prepare items for Materials Needed
-        const stringMaterialsNeeded = this.state.course.materialsNeeded;
-        let liMaterialsNeeded = 'none';
-        if (stringMaterialsNeeded !== null) {
-            liMaterialsNeeded = stringMaterialsNeeded.split("\n* ").map((item, index) => {
-                 return <li key={index}>{item.replace('* ', '')}</li>
-            })
-        }
-        // prepare paragraphs for Description
-        const stringDescription = this.state.course.description;
-        let pDescription;
-        if (stringDescription) {
-            pDescription = stringDescription.split("\n").map((item, index) => {
-                 return <p key={index}>{item}</p>
-            })
-        }
-        // render Course Details
         return (
             <div>
                 <div className="actions--bar">
                     <div className="bounds">
                         <div className="grid-100">
-                            <span>
-                                <a className="button" href="update-course.html">Update Course</a>
-                                <a className="button" href="/">Delete Course</a>
-                            </span>
+                            {this.props.user && (this.props.user.id === this.state.course.owner.id) && (
+                                <span>
+                                    <a className="button" href={`/courses/${this.props.match.params.id}/update`}>Update Course</a>
+                                    <button className="button" onClick={() => deleteCourse(this.state.course, this.props)}>Delete Course</button>
+                                </span>
+                            )}
                             <a className="button button-secondary" href="/">Return to List</a>
                         </div>
                     </div>
@@ -56,7 +43,7 @@ class CourseDetail extends Component {
                             <p>{`${this.state.course.owner.firstName} ${this.state.course.owner.lastName}`}</p>
                         </div>
                         <div className="course--description">
-                            {pDescription}
+                            <ReactMarkdown source={this.state.course.description} />
                         </div>
                     </div>
                         <div className="grid-25 grid-right">
@@ -64,13 +51,11 @@ class CourseDetail extends Component {
                             <ul className="course--stats--list">
                                 <li className="course--stats--list--item">
                                     <h4>Estimated Time</h4>
-                                    <h3>{this.state.course.estimatedTime ? this.state.course.estimatedTime : "unknow"}</h3>
+                                    <h3>{this.state.course.estimatedTime}</h3>
                                 </li>
                                 <li className="course--stats--list--item">
                                     <h4>Materials Needed</h4>
-                                    <ul>
-                                        {liMaterialsNeeded}
-                                    </ul>
+                                    <ReactMarkdown source={this.state.course.materialsNeeded} />
                                 </li>
                             </ul>
                         </div>

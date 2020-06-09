@@ -1,6 +1,6 @@
 import apiBaseUrl from './config.js'
 
-async function fetchRequest(path, method, body = null) {
+async function fetchRequest(path, method, body = null, requiresAuth = false, credentials = null) {
     try {
         const url = apiBaseUrl + path;
         const options = {
@@ -10,9 +10,14 @@ async function fetchRequest(path, method, body = null) {
         if (body !== null) {
             options.body = JSON.stringify(body);
         }
+        if (requiresAuth) {  
+            options.headers['Authorization'] = `Basic ${credentials}`;
+        }
         let response = await fetch(url, options);
-        let data = await response.json();
-        return data;
+        if (response.status !== 204) {
+            let data = await response.json();
+            return data;
+        }
     } catch(error) {
         console.error(error)
     }
