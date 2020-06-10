@@ -1,3 +1,0 @@
-1.) filename component match its component name.
-2.) Your UserSignOut component is technically not stateless
-3.) When to create/update data within the UserSignUp, CreateCourse, and UpdateCourse, validation errors are not being returned from your api.
