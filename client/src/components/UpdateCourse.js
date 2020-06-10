@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import Validation from './validation';
+import Validation from './Validation';
 import fetchRequest from '../fetchRequest';
 
 /* a form to update a course */
 class UpdateCourse extends Component {
     constructor() {
         super();
-        this.state = {title:"", description:"", estimatedTime:"", materialsNeeded:"", owner:{}, errors:[]};
+        this.state = {id:null, title:"", description:"", estimatedTime:"", materialsNeeded:"", owner:{}, errors:[]};
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
@@ -22,30 +22,23 @@ class UpdateCourse extends Component {
     /* update the course */
     async handleSubmit(event) {
         event.preventDefault();
-        const { title, description, estimatedTime, materialsNeeded } = this.state;
-        const errors = [[title,"Title"], [description, "Description"]]
-            .map(cur => cur[0] === "" ? `Please provide a value for "${cur[1]}"` : null)
-            .filter(cur => cur);
-        if (errors.length) {
-            this.setState({ errors });
-        } else {
-            try {
-                const course = { title, description, estimatedTime, materialsNeeded };
-                const response = await fetchRequest(`/courses`, 'PUT', course, true, this.props.credentials);
-                if (response.status === 204) {
-                    this.props.history.push('/');
-                } else if (response.status === 400) {
-                    const error = await response.json();
-                    this.setState({ errors:error.errors });
-                } else if (response.status === 401) {
-                    this.props.history.push('/forbidden');
-                } else {
-                    throw new Error('Internal Server Error');
-                }
-            } catch(error) {
-                console.error(error);
-                this.props.history.push('/error');
+        const { id, title, description, estimatedTime, materialsNeeded } = this.state;
+        try {
+            const course = { title, description, estimatedTime, materialsNeeded };
+            const response = await fetchRequest(`/courses/${id}`, 'PUT', course, true, this.props.credentials);
+            if (response.status === 204) {
+                this.props.history.push('/');
+            } else if (response.status === 400) {
+                const error = await response.json();
+                this.setState({ errors:error.errors });
+            } else if (response.status === 401) {
+                this.props.history.push('/forbidden');
+            } else {
+                throw new Error('Internal Server Error');
             }
+        } catch(error) {
+            console.error(error);
+            this.props.history.push('/error');
         }
     }
 

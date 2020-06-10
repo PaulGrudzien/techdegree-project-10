@@ -1,7 +1,7 @@
 import fetchRequest from '../fetchRequest';
 
 /* this function try to delete a course */
-async function deleteCourse(courseId, props) {
+async function DeleteCourse(courseId, props) {
     try {
         const response = await fetchRequest(`/courses/${courseId}`, 'DELETE', null, true, props.credentials);
         if (response.status === 204) {
@@ -17,4 +17,4 @@ async function deleteCourse(courseId, props) {
     };
 };
 
-export default deleteCourse;
+export default DeleteCourse;

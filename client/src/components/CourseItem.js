@@ -1,7 +1,7 @@
 import React from 'react';
 
 /* the "button" for one course used in the courses list */
-function Course(props) {
+function CourseItem(props) {
     return (
         <div className="grid-33">
             <a className="course--module course--link" href={"\\courses\\"+props.id}>
@@ -12,4 +12,4 @@ function Course(props) {
     );
 }
 
-export default Course;
+export default CourseItem;

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import Validation from './validation';
+import Validation from './Validation';
 
 /* a form to sign up */
-class UserSignUp extends Component {
+class SignUp extends Component {
     constructor(props) {
         super(props);
         this.state = {firstName:"", lastName:"", emailAddress:"", password:"", confirmPassword:"", errors:[]};
@@ -22,14 +22,8 @@ class UserSignUp extends Component {
     async handleSubmit(event) {
         event.preventDefault();
         const { firstName, lastName, emailAddress, password, confirmPassword } = this.state;
-        const errors = [[firstName, "First Name"], [lastName, "Last Name"], [emailAddress,"Email Address"], [password, "Password"], [confirmPassword, "Confirm Password"]]
-            .map(cur => cur[0] === "" ? `Please provide a value for "${cur[1]}"` : null)
-            .filter(cur => cur);
         if (password !== confirmPassword) {
-            errors.push("Password and Confirm Password doesn't match!");
-        }
-        if (errors.length) {
-            this.setState({ errors });
+            this.setState({ errors:["Password and Confirm Password doesn't match!"] });
         } else {
             try {
                 const user = { firstName, lastName, emailAddress, password };
@@ -89,4 +83,4 @@ class UserSignUp extends Component {
     }
 }
 
-export default UserSignUp;
+export default SignUp;

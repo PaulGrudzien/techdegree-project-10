@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import CourseItem from './course-item';
-import NewCourseButton from './course-new-button';
+import CourseItem from './CourseItem';
+import NewCourseButton from './NewCourseButton';
 import fetchRequest from '../fetchRequest';
 
 /* the list of all courses */

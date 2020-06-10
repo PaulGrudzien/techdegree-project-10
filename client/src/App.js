@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './global.css';
-import Router from './components/router';
-import Header from './components/header';
+import Router from './components/Router';
+import Header from './components/Header';
 import fetchRequest from './fetchRequest';
 
 class App extends Component {

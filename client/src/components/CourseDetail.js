@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import fetchRequest from '../fetchRequest';
 import ReactMarkdown from 'react-markdown';
-import deleteCourse from './course-delete.js';
+import deleteCourse from './deleteCourse.js';
 
 /* a detailled view of a course */
 class CourseDetail extends Component {

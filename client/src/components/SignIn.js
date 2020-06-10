@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import Validation from './validation';
+import Validation from './Validation';
 
 /* a form to sign in */
-class UserSignIn extends Component {
+class SignIn extends Component {
     constructor() {
         super();
         this.state = {emailAddress:"", password:"", errors:[]};
@@ -76,4 +76,4 @@ class UserSignIn extends Component {
     }
 }
 
-export default UserSignIn;
+export default SignIn;

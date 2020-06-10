@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Validation from './validation';
+import Validation from './Validation';
 import fetchRequest from '../fetchRequest';
 
 /* a form to create a course */
@@ -23,27 +23,20 @@ class CreateCourse extends Component {
     async handleSubmit(event) {
         event.preventDefault();
         const { title, description, estimatedTime, materialsNeeded } = this.state;
-        const errors = [[title,"Title"], [description, "Description"]]
-            .map(cur => cur[0] === "" ? `Please provide a value for "${cur[1]}"` : null)
-            .filter(cur => cur);
-        if (errors.length) {
-            this.setState({ errors });
-        } else {
-            try {
-                const course = { title, description, estimatedTime, materialsNeeded };
-                const response = await fetchRequest(`/courses`, 'POST', course, true, this.props.credentials);
-                if (response.status === 201) {
-                    this.props.history.push('/');
-                } else if (response.status === 400) {
-                    const error = await response.json();
-                    this.setState({ errors:error.errors });
-                } else {
-                    throw new Error();
-                };
-            } catch(error) {
-                console.error(error);
-                this.props.history.push('/error');
+        try {
+            const course = { title, description, estimatedTime, materialsNeeded };
+            const response = await fetchRequest(`/courses`, 'POST', course, true, this.props.credentials);
+            if (response.status === 201) {
+                this.props.history.push('/');
+            } else if (response.status === 400) {
+                const error = await response.json();
+                this.setState({ errors:error.errors });
+            } else {
+                throw new Error();
             };
+        } catch(error) {
+            console.error(error);
+            this.props.history.push('/error');
         };
     };
 
